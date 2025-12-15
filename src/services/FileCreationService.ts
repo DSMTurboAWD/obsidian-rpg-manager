@@ -209,11 +209,20 @@ export class FileCreationService {
 				response += pathSeparator + "11. Monsters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
-				break;
-			case ElementType.Lore:
-				response += pathSeparator + "12. Lore";
-				this._createFolder(response);
-				response += pathSeparator + this._name + ".md";
+				break;			case ElementType.Lore:
+				if (parent?.type === ElementType.Lore) {
+					// Nest under parent lore - create parent folder first
+					const parentFolder = response + pathSeparator + "12. Lore" + pathSeparator + parent.name;
+					this._createFolder(parentFolder);
+					response = parentFolder + pathSeparator + this._name;
+					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
+				} else {
+					// Top-level lore - create as a folder
+					response += pathSeparator + "12. Lore" + pathSeparator + this._name;
+					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
+				}
 				break;
 		}
 
